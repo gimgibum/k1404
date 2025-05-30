@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<!--
+  Infographic Title: 생성형 AI를 똑똑하고 바르게 활용하는 방법 (How to Use Generative AI Smartly and Correctly)
+  Date of Generation: 2025-05-30
+  Primary Data Source: Student Co-authored Research Report
+  Key Technologies Used: HTML, Tailwind CSS, Chart.js (via CDN)
+  Purpose: To visually summarize the key findings, methodology, and conclusions of the student research report.
+  Language: Korean
+  Authoring Tool: AI Language Model
+-->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 AI를 똑똑하고 바르게 활용하는 방법 - 연구 보고서 인포그래픽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif; /* Tailwind's default sans-serif stack, good for Korean */
+            background-color: #F4F7F9; /* Light Background */
+            color: #263238; /* Dark Text */
+        }
+        .chart-container {
+            position: relative; /* Required for Chart.js responsiveness */
+            margin: auto;
+            background-color: #FFFFFF; /* Card Background for charts */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h1, h2, h3 {
+            color: #2A62B6; /* Primary Blue */
+        }
+        .section-card {
+            background-color: #FFFFFF; /* Card Background */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .text-primary { color: #2A62B6; }
+        .text-secondary { color: #4ECDC4; }
+        .bg-primary { background-color: #2A62B6; }
+        .bg-secondary { background-color: #4ECDC4; }
+        .bg-accent-grey { background-color: #A9A9A9; }
+        .bg-supporting-light-blue { background-color: #E0F2FE; }
+
+        /* 해라체 스타일 적용 */
+        .report-text p, .report-text li {
+            line-height: 1.8;
+        }
+        .report-text strong {
+            color: #2A62B6; /* Primary Blue for emphasis */
+        }
+
+        /* Chart.js Tooltip Customization */
+        .chartjs-tooltip {
+            opacity: 1;
+            position: absolute;
+            background: rgba(38, 50, 56, 0.9); /* Dark Text with opacity */
+            color: white;
+            border-radius: 0.375rem; /* rounded-md */
+            padding: 0.5rem 0.75rem; /* py-2 px-3 */
+            font-size: 0.875rem; /* text-sm */
+            pointer-events: none;
+            transition: all .1s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .chartjs-tooltip-key {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 5px;
+        }
+        /* Custom list style for research plan */
+        .custom-list li {
+            padding-left: 1.5em;
+            position: relative;
+            margin-bottom: 0.5em;
+        }
+        .custom-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ECDC4; /* Secondary Teal */
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        // Tailwind Custom Colors (for JS if needed, primarily used via CSS classes)
+        const twColors = {
+            primaryBlue: '#2A62B6',
+            secondaryTeal: '#4ECDC4',
+            accentGrey: '#A9A9A9',
+            supportingLightBlue: '#E0F2FE',
+            darkText: '#263238',
+            lightBackground: '#FFFFFF',
+            bodyBg: '#F4F7F9'
+        };
+
+        // Chart.js Global Configuration
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = twColors.darkText; // Default font color for charts
+        Chart.defaults.plugins.tooltip.enabled = false; // Disable default tooltips
+        Chart.defaults.plugins.tooltip.mode = 'index';
+        Chart.defaults.plugins.tooltip.intersect = false;
+        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(38, 50, 56, 0.9)'; // darkText with opacity
+        Chart.defaults.plugins.tooltip.titleFont = { size: 14, weight: 'bold' };
+        Chart.defaults.plugins.tooltip.bodyFont = { size: 12 };
+        Chart.defaults.plugins.tooltip.padding = 10;
+        Chart.defaults.plugins.tooltip.cornerRadius = 6;
+
+
+        // Function to wrap Korean text for Chart.js labels
+        function wrapKoreanText(str, maxWidthChars = 16) {
+            if (typeof str !== 'string') return str;
+            const words = str.split(' ');
+            let lines = [];
+            let currentLine = '';
+
+            for (let word of words) {
+                if ((currentLine + word).length <= maxWidthChars) {
+                    currentLine += (currentLine ? ' ' : '') + word;
+                } else {
+                    if (currentLine) lines.push(currentLine);
+                    // If a single word is too long, break it
+                    if (word.length > maxWidthChars) {
+                        let tempWord = word;
+                        while (tempWord.length > maxWidthChars) {
+                            lines.push(tempWord.substring(0, maxWidthChars));
+                            tempWord = tempWord.substring(maxWidthChars);
+                        }
+                        currentLine = tempWord;
+                    } else {
+                        currentLine = word;
+                    }
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        }
+
+        // Custom Tooltip HTML generator
+        const getOrCreateTooltip = (chart) => {
+            let tooltipEl = chart.canvas.parentNode.querySelector('div.chartjs-tooltip');
+            if (!tooltipEl) {
+                tooltipEl = document.createElement('div');
+                tooltipEl.classList.add('chartjs-tooltip');
+                tooltipEl.innerHTML = '<table></table>';
+                chart.canvas.parentNode.appendChild(tooltipEl);
+            }
+            return tooltipEl;
+        };
+
+        const externalTooltipHandler = (context) => {
+            const {chart, tooltip} = context;
+            const tooltipEl = getOrCreateTooltip(chart);
+
+            if (tooltip.opacity === 0) {
+                tooltipEl.style.opacity = 0;
+                return;
+            }
+
+            if (tooltip.body) {
+                const titleLines = tooltip.title || [];
+                const bodyLines = tooltip.body.map(b => b.lines);
+
+                let innerHtml = '<thead>';
+                titleLines.forEach(title => {
+                    innerHtml += '<tr><th colspan="2" class="text-left py-1">' + title + '</th></tr>';
+                });
+                innerHtml += '</thead><tbody>';
+
+                bodyLines.forEach((body, i) => {
+                    const colors = tooltip.labelColors[i];
+                    const style = 'background:' + colors.backgroundColor + '; border-color:' + colors.borderColor + '; border-width: 2px;';
+                    const span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
+                    const label = body[0] || ''; // Ensure label is defined
+                    const value = label.split(': ')[1] || '';
+                    const labelText = label.split(': ')[0] || '';
+                    innerHtml += '<tr><td class="py-1">' + span + labelText + '</td><td class="text-right font-semibold pl-2">' + value + '</td></tr>';
+                });
+                innerHtml += '</tbody>';
+
+                tooltipEl.querySelector('table').innerHTML = innerHtml;
+            }
+
+            const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+            tooltipEl.style.opacity = 1;
+            tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+            tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+            tooltipEl.style.fontFamily = tooltip.options.bodyFont.family;
+            tooltipEl.style.fontSize = tooltip.options.bodyFont.size + 'px';
+            tooltipEl.style.fontStyle = tooltip.options.bodyFont.style;
+            tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+        };
+
+    </script>
+</head>
+<body class="bg-gray-100 p-4 md:p-8 report-text">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 text-center section-card">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">생성형 AI를 똑똑하고 바르게 활용하는 방법</h1>
+            <p class="text-lg text-gray-700">미림마이스터고등학교 1학년 4반 3조</p>
+            <p class="text-sm text-gray-500">김기범, 박주혁, 강하윤, 정재희</p>
+            <p class="text-sm text-gray-500">작성일: 2025년 5월</p>
+        </header>
+
+        <section id="motivation-purpose" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Ⅰ. 조사 동기와 목적</h2>
+            <p>최근 생성형 AI는 일상생활뿐 아니라 교육 환경에도 빠르게 확산되고 있다. 특히 ChatGPT와 같은 언어 생성형 도구는 글쓰기, 탐색, 번역, 코딩 등 다양한 분야에서 활용도가 높다. 그러나 무비판적인 사용은 사고력 저하, 표절, 정보 왜곡 등 부작용을 유발할 수 있다.</p>
+            <p>이에 본 조사는 고등학생들이 생성형 AI를 윤리적으로 활용하고, 학습 및 진로에 도움이 되는 방향으로 활용할 수 있는 실천적 방법을 모색하는 데 목적이 있다.</p>
+        </section>
+
+        <section id="research-plan" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Ⅱ. 조사 계획</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-primary mb-2">조사 기간</h3>
+                    <p>2025년 5월 12일(월) ~ 5월 16일(금)</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-primary mb-2">조사 대상</h3>
+                    <p>서울 미림마이스터고등학교 소프트웨어과 1학년 4반 학생 18명 (남학생 10명, 여학생 8명)</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold text-primary mb-2">조사 방법</h3>
+                <ul class="custom-list list-inside">
+                    <li>양적 설문조사와 질적 인터뷰 병행.</li>
+                    <li>설문 설계: Google Forms를 통해 5점 척도 및 다지선다형 문항 총 8문항 구성.</li>
+                    <li>인터뷰 설계: ClovaNote를 활용한 개별 심층 인터뷰(학생 2명)로 AI 활용 경험 및 심리적 반응 분석.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="research-results" class="section-card">
+            <h2 class="text-2xl font-semibold mb-6">Ⅲ. 조사 결과</h2>
+            
+            <div id="survey-analysis">
+                <h3 class="text-xl font-semibold text-primary mb-4">1. 설문조사 분석</h3>
+                <p class="mb-6">학생들의 생성형 AI 활용 양상과 인식을 파악하기 위해 설문조사를 실시했다. 주요 결과는 다음과 같다.</p>
+
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-1 text-center">생성형 AI 활용 목적</h4>
+                    <p class="text-sm text-gray-600 mb-3 text-center">([표 1] 생성형 AI 활용 목적별 응답, 복수응답 가능, n=18)</p>
+                    <div class="chart-container w-full max-w-2xl mx-auto h-96 md:h-[450px]">
+                        <canvas id="aiUsagePurposeChart"></canvas>
+                    </div>
+                    <p class="text-center mt-2 text-sm text-gray-700"><strong>주요 결과:</strong> 학습 자료 찾기 및 이해에 생성형 AI를 가장 많이 사용했고, 코딩 관련 도움과 아이디어 얻기가 뒤를 이었다. 번역과 고민 말하기는 상대적으로 낮은 비율을 차지했다.</p>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-1 text-center">생성형 AI 정보 정확성 신뢰도</h4>
+                    <p class="text-sm text-gray-600 mb-3 text-center">(설문 문항: 생성형 AI가 제공하는 정보나 답변의 정확성에 대해 어느 정도 신뢰하나요?, n=18)</p>
+                    <div class="chart-container w-full max-w-xl mx-auto h-80 md:h-96">
+                        <canvas id="aiInfoTrustChart"></canvas>
+                    </div>
+                     <p class="text-center mt-2 text-sm text-gray-700"><strong>주요 결과:</strong> AI 정보 정확성에 대해 '보통이다'와 '신뢰한다'는 응답이 각각 38.9%로 높게 나타났으며, '매우 신뢰한다'는 응답도 16.7%로 나타나 전반적으로 신뢰하는 경향을 보였다.</p>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-1 text-center">생성형 AI 결과물 편향 인식 수준</h4>
+                    <p class="text-sm text-gray-600 mb-3 text-center">(설문 문항: 생성형 AI를 사용할 때, 결과물이 틀릴 수도 있거나 편향될 수 있다는 점을 얼마나 인식하고 있나요?, n=18)</p>
+                    <div class="chart-container w-full max-w-xl mx-auto h-80 md:h-96">
+                        <canvas id="aiBiasAwarenessChart"></canvas>
+                    </div>
+                    <p class="text-center mt-2 text-sm text-gray-700"><strong>주요 결과:</strong> 다수의 학생(총 88.9%)이 AI 결과물의 오류 또는 편향 가능성을 '보통' 이상으로 인식하고 있어, 비판적 수용 태도를 보였다.</p>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-1 text-center">생성형 AI 정보 사실 확인 빈도</h4>
+                    <p class="text-sm text-gray-600 mb-3 text-center">(설문 문항: 생성형 AI가 제공한 정보나 답변이 정확한지, 다른 자료와 비교하거나 사실인지 직접 확인하는 과정을 얼마나 자주 거치나요?, n=18)</p>
+                    <div class="chart-container w-full max-w-xl mx-auto h-80 md:h-96">
+                        <canvas id="aiFactCheckChart"></canvas>
+                    </div>
+                    <p class="text-center mt-2 text-sm text-gray-700"><strong>주요 결과:</strong> 절반(50%)의 학생이 AI 답변을 '가끔 확인한다'고 응답했으며, '항상 확인한다'는 학생도 11.1%로 나타나, 다수가 AI 답변을 검토하는 태도를 보였다. (총 88.9%가 '보통' 이상으로 확인)</p>
+                </div>
+                 <p class="mt-6 text-md">AI의 오류 가능성에 대해 학생들 대부분이 인식하고 있었으며, 16명(88.9%)이 AI의 답변을 무조건 신뢰하지 않고 검토 또는 교차 검증한다고 응답했다 (설문4 기반: '보통이다', '가끔 확인한다', '항상 확인한다' 응답자 합산).</p>
+            </div>
+
+            <div id="interview-summary" class="mt-10">
+                <h3 class="text-xl font-semibold text-primary mb-4">2. 인터뷰 요약</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-supporting-light-blue p-6 rounded-lg shadow">
+                        <h4 class="text-lg font-semibold text-primary mb-2">신수아 학생</h4>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            <li>생성형 AI를 '참고자료'로 한정하며 자신의 말투와 맞지 않으면 직접 수정하여 사용한다.</li>
+                            <li>AI가 만든 결과를 그대로 사용하는 것에 대한 거부감이 있으며, 빠른 정답 제공이 오히려 성취감을 감소시킨다고 인식한다.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-supporting-light-blue p-6 rounded-lg shadow">
+                        <h4 class="text-lg font-semibold text-primary mb-2">홍성재 학생</h4>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            <li>AI 사용 초기에 만족했으나, 자신의 실력과 AI 답변 사이의 괴리에서 혼란을 느꼈다.</li>
+                            <li>과제에 AI가 작성한 문장을 그대로 제출했다가 감점을 받은 경험을 통해, AI의 역할은 참고 수준에 머물러야 한다는 교훈을 얻었다.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion-implications" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Ⅳ. 결론 및 시사점</h2>
+            <p>조사 결과, 학생들은 생성형 AI를 단순한 정답 제공 도구가 아닌 학습 보조 수단으로 활용하려는 태도를 보였다. 이는 AI를 활용하되 결과를 비판적으로 수용하고 수정하려는 디지털 리터러시의 초석이라 평가할 수 있다.</p>
+            <p>그러나 일부 학생은 AI의 언어 표현이 자신의 말투나 생각과 충돌한다고 느꼈고, 이는 자존감이나 자기 효능감에 영향을 미치는 것으로 나타났다. AI에 대한 심리적 의존과 불안정한 정체성 형성 가능성은 교육적 개입이 필요한 부분이다.</p>
+            <p>무엇보다, 학생들이 AI 사용 중 자주 스스로에게 "이것이 내 생각인가, AI의 제안인가?"라는 질문을 던졌다는 점은 시사하는 바가 크다. 이는 기술 활용을 넘어서 자기 주도성과 윤리적 판단의 문제로 이어진다.</p>
+        </section>
+
+        <section id="findings-suggestions" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Ⅴ. 주요 발견점 및 제언</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">주요 발견점</h3>
+                    <ul class="custom-list list-inside space-y-2">
+                        <li>대부분의 학생이 AI의 오류 가능성을 인식하고 비판적으로 활용하고 있었다.</li>
+                        <li>AI 사용이 학생의 자아 표현 및 감정 상태에 영향을 미칠 수 있음이 드러났다.</li>
+                        <li>생성형 AI는 단순한 생산 도구가 아닌, 사고와 정체성 형성에 영향을 주는 '인지적 조력자'로 작용하고 있다.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">제언 및 다짐</h3>
+                    <ul class="custom-list list-inside space-y-2">
+                        <li>AI 활용 교육은 단순한 사용법 중심이 아니라, 정보 검증, 표절 방지, 정체성 확립, 심리적 안정까지 아우르는 통합적 리터러시 교육으로 확장되어야 한다.</li>
+                        <li>향후에는 교사와 학생이 함께 AI 활용 가이드라인을 마련하고, 실습과 토론 중심의 교육 프로그램을 구축할 필요가 있다.</li>
+                        <li><strong>학생의 다짐:</strong> AI를 단순한 복사 도구가 아닌, 나의 사고를 자극하고 도와주는 조력자로 사용할 것이다. 매 순간 내가 주체가 되어 기술을 활용하는 능동적 학습자가 되기를 다짐한다.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="references" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Ⅵ. 참고 자료</h2>
+            <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
+                <li>Google Forms 설문조사 결과 (2025.05.12~16)</li>
+                <li>ChatGPT 활용 질의 응답 이력</li>
+                <li>ClovaNote 인터뷰 녹취 및 정리 자료</li>
+                <li>김형주(2024), 「AI와 교육 윤리」, 한국교육정보연구소 논문집</li>
+            </ul>
+        </section>
+
+        <footer class="text-center mt-12 mb-6">
+            <p class="text-sm text-gray-600">&copy; 2025 미림마이스터고 1학년 4반 3조. 모든 권리 보유.</p>
+            <p class="text-xs text-gray-500 mt-1">인포그래픽 생성: AI 지원 도구 활용</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1: AI Usage Purpose
+            const aiUsagePurposeCtx = document.getElementById('aiUsagePurposeChart').getContext('2d');
+            new Chart(aiUsagePurposeCtx, {
+                type: 'bar', // Changed to bar for better readability of multiple categories
+                data: {
+                    labels: [
+                        '학습 자료 찾기 및 이해\n(개념 설명, 요약 등)', 
+                        '코딩 관련 도움', 
+                        '아이디어 얻기\n(창작, 기획 등)', 
+                        '글쓰기 또는 글 다듬기\n(보고서 초안, 이메일, 아이디어 정리)', // Added from original survey 1 data, re-evaluating. Report's [표 1] is primary.
+                                                                            // The report has "글쓰기 또는 글 다듬기" as 6 (33.3%) in the *initial* "설문 1" table, but not in "[표 1]".
+                                                                            // Sticking to [표 1] as instructed in thought process.
+                                                                            // [표 1] data: 학습자료 이해, 코딩 도움, 아이디어 얻기, 번역, 고민 말하기, 기타
+                        '번역', 
+                        '고민 말하기',
+                        '기타' // From [표 1]
+                    ].map(label => wrapKoreanText(label, 15)),
+                    datasets: [{
+                        label: '응답자 수 (명)',
+                        data: [10, 9, 8, 3, 3, 2], // Data from [표 1]
+                        backgroundColor: [
+                            twColors.primaryBlue, 
+                            twColors.secondaryTeal, 
+                            twColors.accentGrey, 
+                            '#FFB1C1', // Light Pink
+                            '#FFD6A5', // Light Orange
+                            '#A0E7E5'  // Light Cyan
+                        ],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Horizontal bar chart
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: '응답자 수 (명)' }
+                        },
+                        y: {
+                             ticks: { autoSkip: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true, // Use Chart.js default tooltip for simplicity here or enable custom one
+                            // enabled: false, // if using custom HTML tooltip
+                            // external: externalTooltipHandler // for custom HTML tooltip
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += context.parsed.x + '명 (' + ((context.parsed.x / 18) * 100).toFixed(1) + '%)';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Correcting data for Chart 1 based on [표 1] from the report.
+            // [표 1] data: 학습자료 이해(10), 코딩 도움(9), 아이디어 얻기(8), 번역(3), 고민 말하기(3), 기타(2)
+            // The labels and data above are now aligned with [표 1].
+
+            // Chart 2: AI Info Trust
+            const aiInfoTrustCtx = document.getElementById('aiInfoTrustChart').getContext('2d');
+            new Chart(aiInfoTrustCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['전혀 신뢰하지 않는다', '신뢰하지 않는다', '보통이다', '신뢰한다', '매우 신뢰한다'].map(l=>wrapKoreanText(l,10)),
+                    datasets: [{
+                        label: '응답자 수 (명)',
+                        data: [0, 1, 7, 7, 3], // Data from "설문 2"
+                        backgroundColor: [twColors.supportingLightBlue, '#FFD6A5', twColors.secondaryTeal, twColors.primaryBlue, '#2A3B6F'],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: '응답자 수 (명)' } } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '명 (' + ((context.parsed.y / 18) * 100).toFixed(1) + '%)';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: AI Bias Awareness
+            const aiBiasAwarenessCtx = document.getElementById('aiBiasAwarenessChart').getContext('2d');
+            new Chart(aiBiasAwarenessCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['전혀 인식하지 못하고 있다', '인식하지 못하고 있다', '보통이다', '인식하고 있다', '잘 인식하고 있다'].map(l=>wrapKoreanText(l,10)),
+                    datasets: [{
+                        label: '응답자 수 (명)',
+                        data: [0, 1, 6, 6, 5], // Data from "설문 3"
+                        backgroundColor: [twColors.supportingLightBlue, '#FFD6A5', twColors.accentGrey, twColors.secondaryTeal, twColors.primaryBlue],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: '응답자 수 (명)' } } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '명 (' + ((context.parsed.y / 18) * 100).toFixed(1) + '%)';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 4: AI Fact Check Frequency
+            const aiFactCheckCtx = document.getElementById('aiFactCheckChart').getContext('2d');
+            new Chart(aiFactCheckCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['전혀 확인하지 않는다', '별로 확인하지 않는다', '보통이다', '가끔 확인한다', '항상 확인한다'].map(l=>wrapKoreanText(l,10)),
+                    datasets: [{
+                        label: '응답자 수 (명)',
+                        data: [1, 1, 5, 9, 2], // Data from "설문 4"
+                        backgroundColor: [twColors.supportingLightBlue, '#FFD6A5', twColors.accentGrey, twColors.secondaryTeal, twColors.primaryBlue],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: '응답자 수 (명)' } } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '명 (' + ((context.parsed.y / 18) * 100).toFixed(1) + '%)';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    </body>
+</html>
+
