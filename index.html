@@ -55,25 +55,6 @@
             color: #2A62B6; /* Primary Blue for emphasis */
         }
 
-        /* Chart.js Tooltip Customization */
-        .chartjs-tooltip {
-            opacity: 1;
-            position: absolute;
-            background: rgba(38, 50, 56, 0.9); /* Dark Text with opacity */
-            color: white;
-            border-radius: 0.375rem; /* rounded-md */
-            padding: 0.5rem 0.75rem; /* py-2 px-3 */
-            font-size: 0.875rem; /* text-sm */
-            pointer-events: none;
-            transition: all .1s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .chartjs-tooltip-key {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin-right: 5px;
-        }
         /* Custom list style for research plan */
         .custom-list li {
             padding-left: 1.5em;
@@ -103,7 +84,11 @@
         // Chart.js Global Configuration
         Chart.defaults.font.family = 'Inter, sans-serif';
         Chart.defaults.color = twColors.darkText; // Default font color for charts
-        Chart.defaults.plugins.tooltip.enabled = false; // Disable default tooltips
+        
+        // --- Tooltip Fix Starts Here ---
+        Chart.defaults.plugins.tooltip.enabled = true; // Enable default tooltips globally
+        // --- Tooltip Fix Ends Here ---
+
         Chart.defaults.plugins.tooltip.mode = 'index';
         Chart.defaults.plugins.tooltip.intersect = false;
         Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(38, 50, 56, 0.9)'; // darkText with opacity
@@ -141,62 +126,6 @@
             if (currentLine) lines.push(currentLine);
             return lines;
         }
-
-        // Custom Tooltip HTML generator
-        const getOrCreateTooltip = (chart) => {
-            let tooltipEl = chart.canvas.parentNode.querySelector('div.chartjs-tooltip');
-            if (!tooltipEl) {
-                tooltipEl = document.createElement('div');
-                tooltipEl.classList.add('chartjs-tooltip');
-                tooltipEl.innerHTML = '<table></table>';
-                chart.canvas.parentNode.appendChild(tooltipEl);
-            }
-            return tooltipEl;
-        };
-
-        const externalTooltipHandler = (context) => {
-            const {chart, tooltip} = context;
-            const tooltipEl = getOrCreateTooltip(chart);
-
-            if (tooltip.opacity === 0) {
-                tooltipEl.style.opacity = 0;
-                return;
-            }
-
-            if (tooltip.body) {
-                const titleLines = tooltip.title || [];
-                const bodyLines = tooltip.body.map(b => b.lines);
-
-                let innerHtml = '<thead>';
-                titleLines.forEach(title => {
-                    innerHtml += '<tr><th colspan="2" class="text-left py-1">' + title + '</th></tr>';
-                });
-                innerHtml += '</thead><tbody>';
-
-                bodyLines.forEach((body, i) => {
-                    const colors = tooltip.labelColors[i];
-                    const style = 'background:' + colors.backgroundColor + '; border-color:' + colors.borderColor + '; border-width: 2px;';
-                    const span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
-                    const label = body[0] || ''; // Ensure label is defined
-                    const value = label.split(': ')[1] || '';
-                    const labelText = label.split(': ')[0] || '';
-                    innerHtml += '<tr><td class="py-1">' + span + labelText + '</td><td class="text-right font-semibold pl-2">' + value + '</td></tr>';
-                });
-                innerHtml += '</tbody>';
-
-                tooltipEl.querySelector('table').innerHTML = innerHtml;
-            }
-
-            const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
-            tooltipEl.style.opacity = 1;
-            tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-            tooltipEl.style.top = positionY + tooltip.caretY + 'px';
-            tooltipEl.style.fontFamily = tooltip.options.bodyFont.family;
-            tooltipEl.style.fontSize = tooltip.options.bodyFont.size + 'px';
-            tooltipEl.style.fontStyle = tooltip.options.bodyFont.style;
-            tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
-        };
-
     </script>
 </head>
 <body class="bg-gray-100 p-4 md:p-8 report-text">
@@ -293,11 +222,15 @@
             <!-- Infographic Section: Interview Summaries -->
             <div id="interview-summary" class="mt-10">
                 <h3 class="text-xl font-semibold text-primary mb-4">2. 인터뷰 요약</h3>
-                <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div class="grid md:grid-cols-2 gap-8 items-start">
                     <div> <!-- Column for Shin Su-a -->
-                        <div class="bg-supporting-light-blue p-6 rounded-lg shadow">
+                        <div class="bg-supporting-light-blue p-6 rounded-lg shadow text-center">
+                             <img src="src/스크린샷 2025-06-10 143815.png"
+                                 alt="신수아 학생 인터뷰 사진" 
+                                 class="w-32 h-32 mx-auto rounded-full shadow-xl object-cover mb-4"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/128x128/4ECDC4/FFFFFF?text=신수아';">
                             <h4 class="text-lg font-semibold text-primary mb-2">신수아 학생</h4>
-                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            <ul class="list-disc list-inside space-y-1 text-gray-700 text-left">
                                 <li>생성형 AI를 '참고자료'로 한정하며 자신의 말투와 맞지 않으면 직접 수정하여 사용한다.</li>
                                 <li>AI가 만든 결과를 그대로 사용하는 것에 대한 거부감이 있으며, 빠른 정답 제공이 오히려 성취감을 감소시킨다고 인식한다.</li>
                             </ul>
@@ -312,9 +245,13 @@
                         </div>
                     </div>
                     <div> <!-- Column for Hong Seong-jae -->
-                        <div class="bg-supporting-light-blue p-6 rounded-lg shadow">
+                        <div class="bg-supporting-light-blue p-6 rounded-lg shadow text-center">
+                            <img src="src/스크린샷 2025-06-10 145645.png" 
+                                 alt="홍성재 학생 인터뷰 사진" 
+                                 class="w-32 h-32 mx-auto rounded-full shadow-xl object-cover mb-4"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/128x128/2A62B6/FFFFFF?text=홍성재';">
                             <h4 class="text-lg font-semibold text-primary mb-2">홍성재 학생</h4>
-                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            <ul class="list-disc list-inside space-y-1 text-gray-700 text-left">
                                 <li>AI 사용 초기에 만족했으나, 자신의 실력과 AI 답변 사이의 괴리에서 혼란을 느꼈다.</li>
                                 <li>과제에 AI가 작성한 문장을 그대로 제출했다가 감점을 받은 경험을 통해, AI의 역할은 참고 수준에 머물러야 한다는 교훈을 얻었다.</li>
                             </ul>
@@ -324,7 +261,7 @@
                             <img src="src/스크린샷 2025-06-10 143948.png" 
                                  alt="홍성재 학생 인터뷰 워드 클라우드" 
                                  class="w-full max-w-md mx-auto rounded-xl shadow-xl"
-                                 onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0F2FE/2A62B6?text=이미지를+찾을+수+없습니다';">
+                                 onerror="this.onerror=null;this.src='https.placehold.co/600x400/E0F2FE/2A62B6?text=이미지를+찾을+수+없습니다';">
                             <p class="text-center text-sm text-gray-600 mt-2">홍성재 학생 인터뷰 워드 클라우드</p>
                         </div>
                     </div>
@@ -382,19 +319,16 @@
             // Chart 1: AI Usage Purpose
             const aiUsagePurposeCtx = document.getElementById('aiUsagePurposeChart').getContext('2d');
             new Chart(aiUsagePurposeCtx, {
-                type: 'bar', // Changed to bar for better readability of multiple categories
+                type: 'bar',
                 data: {
                     labels: [
                         '학습 자료 찾기 및 이해\n(개념 설명, 요약 등)', 
                         '코딩 관련 도움', 
                         '아이디어 얻기\n(창작, 기획 등)', 
-                        '글쓰기 또는 글 다듬기\n(보고서 초안, 이메일, 아이디어 정리)', // Added from original survey 1 data, re-evaluating. Report's [표 1] is primary.
-                                                                            // The report has "글쓰기 또는 글 다듬기" as 6 (33.3%) in the *initial* "설문 1" table, but not in "[표 1]".
-                                                                            // Sticking to [표 1] as instructed in thought process.
-                                                                            // [표 1] data: 학습자료 이해, 코딩 도움, 아이디어 얻기, 번역, 고민 말하기, 기타
+                        '글쓰기 또는 글 다듬기\n(보고서 초안, 이메일, 아이디어 정리)',
                         '번역', 
                         '고민 말하기',
-                        '기타' // From [표 1]
+                        '기타'
                     ].map(label => wrapKoreanText(label, 15)),
                     datasets: [{
                         label: '응답자 수 (명)',
@@ -412,7 +346,7 @@
                     }]
                 },
                 options: {
-                    indexAxis: 'y', // Horizontal bar chart
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
@@ -427,9 +361,6 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            enabled: true, // Use Chart.js default tooltip for simplicity here or enable custom one
-                            // enabled: false, // if using custom HTML tooltip
-                            // external: externalTooltipHandler // for custom HTML tooltip
                             callbacks: {
                                 label: function(context) {
                                     let label = context.dataset.label || '';
@@ -447,10 +378,6 @@
                 }
             });
             
-            // Correcting data for Chart 1 based on [표 1] from the report.
-            // [표 1] data: 학습자료 이해(10), 코딩 도움(9), 아이디어 얻기(8), 번역(3), 고민 말하기(3), 기타(2)
-            // The labels and data above are now aligned with [표 1].
-
             // Chart 2: AI Info Trust
             const aiInfoTrustCtx = document.getElementById('aiInfoTrustChart').getContext('2d');
             new Chart(aiInfoTrustCtx, {
