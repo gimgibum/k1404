@@ -85,10 +85,7 @@
         Chart.defaults.font.family = 'Inter, sans-serif';
         Chart.defaults.color = twColors.darkText; // Default font color for charts
         
-        // --- Tooltip Fix Starts Here ---
         Chart.defaults.plugins.tooltip.enabled = true; // Enable default tooltips globally
-        // --- Tooltip Fix Ends Here ---
-
         Chart.defaults.plugins.tooltip.mode = 'index';
         Chart.defaults.plugins.tooltip.intersect = false;
         Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(38, 50, 56, 0.9)'; // darkText with opacity
@@ -316,30 +313,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // --- Tooltip Fix Starts Here ---
             // Chart 1: AI Usage Purpose
             const aiUsagePurposeCtx = document.getElementById('aiUsagePurposeChart').getContext('2d');
             new Chart(aiUsagePurposeCtx, {
                 type: 'bar',
                 data: {
+                    // Corrected labels to match the data length
                     labels: [
-                        '학습 자료 찾기 및 이해\n(개념 설명, 요약 등)', 
-                        '코딩 관련 도움', 
-                        '아이디어 얻기\n(창작, 기획 등)', 
-                        '글쓰기 또는 글 다듬기\n(보고서 초안, 이메일, 아이디어 정리)',
-                        '번역', 
+                        '학습자료 이해',
+                        '코딩 도움',
+                        '아이디어 얻기',
+                        '번역',
                         '고민 말하기',
                         '기타'
                     ].map(label => wrapKoreanText(label, 15)),
                     datasets: [{
                         label: '응답자 수 (명)',
-                        data: [10, 9, 8, 3, 3, 2], // Data from [표 1]
+                        data: [10, 9, 8, 3, 3, 2], // Data from [표 1] - 6 items
                         backgroundColor: [
                             twColors.primaryBlue, 
                             twColors.secondaryTeal, 
-                            twColors.accentGrey, 
-                            '#FFB1C1', // Light Pink
-                            '#FFD6A5', // Light Orange
-                            '#A0E7E5'  // Light Cyan
+                            '#86BBD8', // Lighter Blue
+                            '#F6AE2D', // Orange
+                            '#F26419', // Darker Orange
+                            twColors.accentGrey 
                         ],
                         borderColor: '#FFFFFF',
                         borderWidth: 1
@@ -377,6 +375,7 @@
                     }
                 }
             });
+            // --- Tooltip Fix Ends Here ---
             
             // Chart 2: AI Info Trust
             const aiInfoTrustCtx = document.getElementById('aiInfoTrustChart').getContext('2d');
