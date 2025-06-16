@@ -59,28 +59,31 @@
             <h3 class="sub-section-title">1. 설문조사 분석</h3>
             <p class="mb-6 text-sm text-gray-600">총 18명 대상 설문</p>
             
-            <div class="mb-8 overflow-x-auto">
-                <h4 class="font-semibold text-lg mb-1 text-center">문항 1: 생성형 AI 주요 사용 용도</h4>
-                <p class="text-xs text-gray-500 text-center mb-3">(복수응답, N=18)</p>
-                <div class="chart-container w-full max-w-3xl mx-auto chart-h-sm md:chart-h-md lg:chart-h-lg">
-                    <canvas id="aiUsageChart" role="img" aria-label="AI 사용 용도 설문 차트"></canvas>
+            <!-- Modified Chart Layout: 1 row with 3 columns on large screens -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Chart 1 -->
+                <div class="overflow-x-auto">
+                    <h4 class="font-semibold text-lg mb-1 text-center">문항 1: 생성형 AI 주요 사용 용도</h4>
+                    <p class="text-xs text-gray-500 text-center mb-3">(복수응답, N=18)</p>
+                    <div class="chart-container w-full mx-auto chart-h-sm md:chart-h-md">
+                        <canvas id="aiUsageChart" role="img" aria-label="AI 사용 용도 설문 차트"></canvas>
+                    </div>
+                    <p class="mt-3 text-sm text-gray-700"><strong>결과:</strong> 학습자료 이해(55.6%) 가장 높고, 코딩 도움(50%), 아이디어(44.4%) 순.</p>
                 </div>
-                <p class="mt-3 text-sm text-gray-700"><strong>결과:</strong> 학습자료 이해(55.6%) 가장 높고, 코딩 도움(50%), 아이디어(44.4%) 순.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Chart 2 -->
                 <div class="overflow-x-auto">
                     <h4 class="font-semibold text-lg mb-1 text-center">문항 2: AI 오류 인식</h4>
                     <p class="text-xs text-gray-500 text-center mb-3">(N=18)</p>
-                    <div class="chart-container w-full max-w-md mx-auto chart-h-sm md:chart-h-md">
+                    <div class="chart-container w-full mx-auto chart-h-sm md:chart-h-md">
                         <canvas id="errorAwarenessChart" role="img" aria-label="AI 오류 인식도 파이차트"></canvas>
                     </div>
                     <p class="mt-3 text-sm text-gray-700"><strong>결과:</strong> ‘인식함/잘 인식함’ 응답이 61.1%, 전혀 인식 안함 응답은 5.6%.</p>
                 </div>
+                <!-- Chart 3 -->
                 <div class="overflow-x-auto">
                     <h4 class="font-semibold text-lg mb-1 text-center">문항 3: 사실 확인 빈도</h4>
                     <p class="text-xs text-gray-500 text-center mb-3">(N=18)</p>
-                    <div class="chart-container w-full max-w-md mx-auto chart-h-sm md:chart-h-md">
+                    <div class="chart-container w-full mx-auto chart-h-sm md:chart-h-md">
                         <canvas id="factCheckingChart" role="img" aria-label="AI 사실 확인 빈도 파이차트"></canvas>
                     </div>
                     <p class="mt-3 text-sm text-gray-700"><strong>결과:</strong> ‘가끔/항상 확인’ 응답이 61.1%, 보통 이상 포함하면 88.9%가 검토 태도 가짐.</p>
@@ -218,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 backgroundColor: ['rgba(42,98,182,0.7)','rgba(78,205,196,0.7)','rgba(169,169,169,0.7)','rgba(42,98,182,0.5)','rgba(78,205,196,0.5)','rgba(169,169,169,0.5)','rgba(42,98,182,0.3)']
             }]
         },
-        options: { ...commonOpts, scales: { y: { beginAtZero: true, ticks: { stepSize: 2 } } } }
+        options: { ...commonOpts, indexAxis: 'y', scales: { y: { beginAtZero: true }, x: { ticks: { stepSize: 2 } } } } // Changed to horizontal bar
     });
 
     // Chart 2: Error Awareness
@@ -228,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['전혀','인식 못함','보통','인식함','잘 인식함'],
             datasets: [{ data: [0,1,6,6,5], backgroundColor: ['#FF6384','#FF9F40','#FFCD56','#4BC0C0','#36A2EB'] }]
         },
-        options: commonOpts
+        options: { ...commonOpts, plugins: { ...commonOpts.plugins, legend: { position: 'top' } } }
     });
 
     // Chart 3: Fact Checking
@@ -238,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['전혀','별로','보통','가끔','항상'],
             datasets: [{ data: [1,1,5,9,2], backgroundColor: ['#FF6384','#FF9F40','#FFCD56','#4BC0C0','#36A2EB'] }]
         },
-        options: commonOpts
+        options: { ...commonOpts, plugins: { ...commonOpts.plugins, legend: { position: 'top' } } }
     });
 });
 </script>
